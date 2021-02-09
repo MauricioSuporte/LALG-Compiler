@@ -98,4 +98,4 @@ if <condicao> then <comandos> <pfalsa> $ |
 <fator> ::= ident | numero_int | numero_real | (<expressao>)
 
 
-## 1º Rodar arquivo léxico, depois Sintático.
+## 1º Inserir entrada Lalg em entrada.txt, rodar arquivo léxico, depois Sintático.
