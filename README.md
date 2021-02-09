@@ -17,37 +17,37 @@ como exemplo de simples, e := como exemplo de duplo).
 
  Glalg = {N,T,P,S} -
  
-N = {<programa>, <corpo>, <dc>, <comando>, <comandos>, <dc_v>, <mais_dc>,
-<dc_p>, <variaveis>, <tipo_var>, <mais_var>, <parametros>, <corpo_p>,
-<lista_par>, <mais_par>, <dc_loc>, <mais_dcloc>, <lista_arg>, <argumentos>,
-<pfalsa>, <condicao>, <expressao>, <relacao>, <termo>, <outros_termos>,
+N = {< programa >, < corpo >, < dc >, <comando>, <comandos>, <dc_v>, <mais_dc>,
+<dc_p>, < variaveis >, <tipo_var>, <mais_var>, < parametros >, <corpo_p>,
+<lista_par>, <mais_par>, <dc_loc>, <mais_dcloc>, <lista_arg>, < argumentos >,
+< pfalsa >, <condicao>, <expressao>, <relacao>, <termo>, <outros_termos>,
 <op_ad>, <op_un>, <fator>, <mais_fatores>, <op_mul>}
  
 T = {ident, numero_int, numero_real, (, ), *, /, +, -, <>, >=, >, <, if, then, $, while, do,
 write, read, ;, else, begin, end, :, , , }
 
 ## Regras de Produção da LALG
-<programa> ::= program ident <corpo> .
+< programa > ::= program ident < corpo > .
  
-<corpo> ::= <dc> begin <comandos> end
+< corpo > ::= < dc > begin <comandos> end
  
-<dc> ::= <dc_v> <mais_dc> | <dc_p> <mais_dc> | λ
+< dc > ::= <dc_v> <mais_dc> | <dc_p> <mais_dc> | λ
 
-<mais_dc> ::= ; <dc> | λ
+<mais_dc> ::= ; < dc > | λ
 
-<dc_v> ::= var <variaveis> : <tipo_var>
+<dc_v> ::= var < variaveis > : <tipo_var>
 
 <tipo_var> ::= real | integer
 
-<variaveis> ::= ident <mais_var>
+< variaveis > ::= ident <mais_var>
 
-<mais_var> ::= , <variaveis> | λ
+<mais_var> ::= , < variaveis > | λ
 
-<dc_p> ::= procedure ident <parametros> <corpo_p>
+<dc_p> ::= procedure ident < parametros > <corpo_p>
 
-<parametros> ::= (<lista_par>) | λ
+< parametros > ::= (<lista_par>) | λ
 
-<lista_par> ::= <variaveis> : <tipo_var> <mais_par>
+<lista_par> ::= < variaveis > : <tipo_var> <mais_par>
 
 <mais_par> ::= ; <lista_par> | λ
 
@@ -57,22 +57,22 @@ write, read, ;, else, begin, end, :, , , }
 
 <mais_dcloc> ::= ; <dc_loc> | λ
 
-<lista_arg> ::= (<argumentos>) | λ
+<lista_arg> ::= (< argumentos >) | λ
 
-<argumentos> ::= ident <mais_ident>
+< argumentos > ::= ident <mais_ident>
 
-<mais_ident> ::= ; <argumentos> | λ
+<mais_ident> ::= ; < argumentos > | λ
 
-<pfalsa> ::= else <comandos> | λ
+< pfalsa > ::= else <comandos> | λ
 
 <comandos> ::= <comando> <mais_comandos>
 
 <mais_comandos> ::= ; <comandos> | λ
 
-<comando> ::= read (<variaveis>) |
-write (<variaveis>) |
+<comando> ::= read (< variaveis >) |
+write (< variaveis >) |
 while <condicao> do <comandos> $ |
-if <condicao> then <comandos> <pfalsa> $ |
+if <condicao> then <comandos> < pfalsa > $ |
  ident <restoIdent>
 
 <restoIdent> ::= := <expressao> | <lista_arg>
