@@ -20,8 +20,8 @@ como exemplo de simples, e := como exemplo de duplo).
 N = {< programa >, < corpo >, < dc >, <comando>, <comandos>, <dc_v>, <mais_dc>,
 <dc_p>, < variaveis >, <tipo_var>, <mais_var>, < parametros >, <corpo_p>,
 <lista_par>, <mais_par>, <dc_loc>, <mais_dcloc>, <lista_arg>, < argumentos >,
-< pfalsa >, <condicao>, <expressao>, <relacao>, <termo>, <outros_termos>,
-<op_ad>, <op_un>, <fator>, <mais_fatores>, <op_mul>}
+< pfalsa >, <condicao>, < expressao >, <relacao>, < termo >, <outros_termos>,
+<op_ad>, <op_un>, < fator >, <mais_fatores>, <op_mul>}
  
 T = {ident, numero_int, numero_real, (, ), *, /, +, -, <>, >=, >, <, if, then, $, while, do,
 write, read, ;, else, begin, end, :, , , }
@@ -75,27 +75,27 @@ while <condicao> do <comandos> $ |
 if <condicao> then <comandos> < pfalsa > $ |
  ident <restoIdent>
 
-<restoIdent> ::= := <expressao> | <lista_arg>
+<restoIdent> ::= := < expressao > | <lista_arg>
 
-<condicao> ::= <expressao> <relacao> <expressao>
+<condicao> ::= < expressao > <relacao> < expressao >
 
 <relacao> ::= = | <> | >= | <= | > | <
 
-<expressao> ::= <termo> <outros_termos>
+< expressao > ::= < termo > <outros_termos>
 
 <op_un> ::= + | - | λ
 
-<outros_termos> ::= <op_ad> <termo> <outros_termos> | λ
+<outros_termos> ::= <op_ad> < termo > <outros_termos> | λ
 
 <op_ad> ::= + | -
 
-<termo> ::= <op_un> <fator> <mais_fatores>
+< termo > ::= <op_un> < fator > <mais_fatores>
 
-<mais_fatores> ::= <op_mul> <fator> <mais_fatores> | λ
+<mais_fatores> ::= <op_mul> < fator > <mais_fatores> | λ
 
 <op_mul> ::= * | /
 
-<fator> ::= ident | numero_int | numero_real | (<expressao>)
+< fator > ::= ident | numero_int | numero_real | (< expressao >)
 
 
 ## 1º Inserir entrada Lalg em entrada.txt, rodar arquivo léxico, depois Sintático.
