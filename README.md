@@ -17,10 +17,10 @@ como exemplo de simples, e := como exemplo de duplo).
 
  Glalg = {N,T,P,S} -
  
-N = {< programa >, < corpo >, < dc >, <comando>, <comandos>, <dc_v>, <mais_dc>,
+N = {< programa >, < corpo >, < dc >, < comando >, < comandos >, <dc_v>, <mais_dc>,
 <dc_p>, < variaveis >, <tipo_var>, <mais_var>, < parametros >, <corpo_p>,
 <lista_par>, <mais_par>, <dc_loc>, <mais_dcloc>, <lista_arg>, < argumentos >,
-< pfalsa >, <condicao>, < expressao >, <relacao>, < termo >, <outros_termos>,
+< pfalsa >, < condicao >, < expressao >, < relacao >, < termo >, <outros_termos>,
 <op_ad>, <op_un>, < fator >, <mais_fatores>, <op_mul>}
  
 T = {ident, numero_int, numero_real, (, ), *, /, +, -, <>, >=, >, <, if, then, $, while, do,
@@ -29,7 +29,7 @@ write, read, ;, else, begin, end, :, , , }
 ## Regras de Produção da LALG
 < programa > ::= program ident < corpo > .
  
-< corpo > ::= < dc > begin <comandos> end
+< corpo > ::= < dc > begin < comandos > end
  
 < dc > ::= <dc_v> <mais_dc> | <dc_p> <mais_dc> | λ
 
@@ -51,7 +51,7 @@ write, read, ;, else, begin, end, :, , , }
 
 <mais_par> ::= ; <lista_par> | λ
 
-<corpo_p> ::= <dc_loc> begin <comandos> end
+<corpo_p> ::= <dc_loc> begin < comandos > end
 
 <dc_loc> ::= <dc_v> <mais_dcloc> | λ
 
@@ -63,23 +63,23 @@ write, read, ;, else, begin, end, :, , , }
 
 <mais_ident> ::= ; < argumentos > | λ
 
-< pfalsa > ::= else <comandos> | λ
+< pfalsa > ::= else < comandos > | λ
 
-<comandos> ::= <comando> <mais_comandos>
+< comandos > ::= < comando > <mais_comandos>
 
-<mais_comandos> ::= ; <comandos> | λ
+<mais_comandos> ::= ; < comandos > | λ
 
-<comando> ::= read (< variaveis >) |
+< comando > ::= read (< variaveis >) |
 write (< variaveis >) |
-while <condicao> do <comandos> $ |
-if <condicao> then <comandos> < pfalsa > $ |
- ident <restoIdent>
+while < condicao > do < comandos > $ |
+if < condicao > then < comandos > < pfalsa > $ |
+ ident < restoIdent >
 
-<restoIdent> ::= := < expressao > | <lista_arg>
+< restoIdent > ::= := < expressao > | <lista_arg>
 
-<condicao> ::= < expressao > <relacao> < expressao >
+< condicao > ::= < expressao > < relacao > < expressao >
 
-<relacao> ::= = | <> | >= | <= | > | <
+< relacao > ::= = | <> | >= | <= | > | <
 
 < expressao > ::= < termo > <outros_termos>
 
