@@ -26,7 +26,7 @@ N = {<programa>, <corpo>, <dc>, <comando>, <comandos>, <dc_v>, <mais_dc>,
 T = {ident, numero_int, numero_real, (, ), *, /, +, -, <>, >=, >, <, if, then, $, while, do,
 write, read, ;, else, begin, end, :, , , }
 
-# Regras de Produção da LALG
+## Regras de Produção da LALG
 <programa> ::= program ident <corpo> .
  
 <corpo> ::= <dc> begin <comandos> end
@@ -98,4 +98,4 @@ if <condicao> then <comandos> <pfalsa> $ |
 <fator> ::= ident | numero_int | numero_real | (<expressao>)
 
 
-# 1º Rodar arquivo léxico, depois Sintático.
+## 1º Rodar arquivo léxico, depois Sintático.
