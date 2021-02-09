@@ -1,2 +1,40 @@
-# Lalg-Compiler
-Compilador da linguagem ficticia Lalg feito em python para matéria Compiladores 2 do curso de Ciência da computação UFMT - Cuiabá
+# G-Compiler
+
+G = ( {Z,I,D,L,X,K,O,S,E,R,T}, {var, : , id, , , integer, real, ; , :=, if, then,+}, P, Z)
+
+P:
+
+Z → I S
+
+I → var D
+
+D → L : K O
+
+L → id X
+
+X → , L
+
+X → ε
+
+K → integer
+
+K → real
+
+O → ; D
+
+O →ε
+
+S → id := E
+
+S → if E then S
+
+E → T R
+
+R → + T R
+
+R → ε
+
+T → id
+
+
+1º Rodar arquivo léxico, depois Sintático.
