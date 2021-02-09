@@ -4,9 +4,12 @@ Observações:
 - Comentários na LALG: entre { } ou /* */
 
 - Identificadores e números são itens léxicos da forma:
+
 • ident: sequência de letras e dígitos, começando por letra
 • número inteiro: sequência de dígitos (0 a 9)
+
 • número real: sequencia de um ou mais dígitos seguido de um ponto
+
 decimal seguido de um ou mais digitos.
 
 - palavras reservadas – são os tokens usados para fins específicos, ou seja, que são
