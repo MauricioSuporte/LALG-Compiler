@@ -1,8 +1,8 @@
 arquivo = open("entrada.txt", "r")
-contador = 0
+numLinha = 0
 tokens = []
 for linha in arquivo:
-    contador = contador + 1
+    numLinha = numLinha + 1
     linha = linha.rstrip()
     i = 0
     tam = len(linha)
@@ -96,9 +96,8 @@ for linha in arquivo:
             i = i + 1
             continue
         else:
-            print("Erro lexico, caracter " + linha[i] + " nao conhecido")
+            print("Erro lexico, caracter " + linha[i] + " nao conhecido na linha " + str(numLinha))
             exit()
-            i = i + 1
 tokens[0] = tokens[0].replace(" ", "")
 print(tokens)
 arqSintatico = open("entradaSintatico.txt", "w")
