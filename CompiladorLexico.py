@@ -98,8 +98,11 @@ for linha in arquivo:
         else:
             print("Erro lexico, caracter " + linha[i] + " nao conhecido na linha " + str(numLinha))
             exit()
+
+
+for i in range(len(tokens)):
+    print(str(i+1) + "º" + str(tokens[i]))
 tokens[0] = tokens[0].replace(" ", "")
-print(tokens)
 arqSintatico = open("entradaSintatico.txt", "w")
 arqSintatico.writelines(tokens)
 arqSintatico.close()
