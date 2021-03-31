@@ -47,11 +47,21 @@ for linha in arquivo:
             tokens.append(" <=")
             i = i + 2
         elif linha[i] == "/" and linha[i+1] == "*":
-            tokens.append(" /*")
-            i = i + 2
-        elif linha[i] == "*" and linha[i+1] == "/":
-            tokens.append(" */")
-            i = i + 2
+            j = i + 2
+            while (j < tam):
+                if (linha[j] == "*" and linha[j+1] == "/"):
+                    break
+                else:
+                    j = j + 1
+            i = j + 2
+        elif linha[i] == "{":
+            j = i + 1
+            while (j < tam):
+                if (linha[j] == "}"):
+                    break
+                else:
+                    j = j + 1
+            i = j + 1
         elif linha[i] == "v" and linha[i+1] == "a" and linha[i+2] == "r":
             tokens.append(" var")
             i = i + 3
@@ -62,7 +72,7 @@ for linha in arquivo:
         elif linha[i] == "r" and linha[i+1] == "e" and linha[i+2] == "a" and linha[i+3] == "l":
             tokens.append(" real")
             i = i + 4
-        elif linha[i] == "," or linha[i] == ";" or linha[i] == "+" or linha[i] == ":" or linha[i] == "(" or linha[i] == ")" or linha[i] == "*" or linha[i] == "/" or linha[i] == "-" or linha[i] == ">" or linha[i] == "<" or linha[i] == "$" or linha[i] == "{" or linha[i] == "}" or linha[i] == ".":
+        elif linha[i] == "," or linha[i] == ";" or linha[i] == "+" or linha[i] == ":" or linha[i] == "(" or linha[i] == ")" or linha[i] == "*" or linha[i] == "/" or linha[i] == "-" or linha[i] == ">" or linha[i] == "<" or linha[i] == "$" or linha[i] == ".":
             tokens.append(" " + linha[i])
             i = i + 1
         elif linha[i] == "i" and linha[i+1] == "f":
