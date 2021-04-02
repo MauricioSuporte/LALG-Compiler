@@ -23,13 +23,13 @@ def programa(ch, pos):
             if ch == ".":
                 print("Cadeia sintaticamente correta.")
             else:
-                print("Erro sintatico, esperado . e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+                print("Erro sintatico, esperado . e encontrado %s na linha %d" %(ch, linha(pos+1)))
                 exit()
         else:
-            print("Erro sintatico, esperado identificador e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+            print("Erro sintatico, esperado identificador e encontrado %s na linha %d" %(ch, linha(pos+1)))
             exit()
     else:
-        print("Erro sintatico, esperado program e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+        print("Erro sintatico, esperado program e encontrado %s na linha %d" %(ch, linha(pos+1)))
         exit()
 
 def corpo(ch, pos):
@@ -40,7 +40,7 @@ def corpo(ch, pos):
             ch, pos = proxsimb(pos)
             return (ch, pos)
         else:
-            print("Erro sintatico, esperado end e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+            print("Erro sintatico, esperado end e encontrado %s na linha %d" %(ch, linha(pos+1)))
             exit()
     elif ch == "var" or ch == "procedure":
         ch, pos = dc(ch, pos)
@@ -51,13 +51,13 @@ def corpo(ch, pos):
                 ch, pos = proxsimb(pos)
                 return (ch, pos)
             else:
-                print("Erro sintatico, esperado end e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+                print("Erro sintatico, esperado end e encontrado %s na linha %d" %(ch, linha(pos+1)))
                 exit()
         else:
-            print("Erro sintatico, esperado begin e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+            print("Erro sintatico, esperado begin e encontrado %s na linha %d" %(ch, linha(pos+1)))
             exit()
     else:
-        print("Erro sintatico, esperado begin ou var ou procedure e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+        print("Erro sintatico, esperado begin ou var ou procedure e encontrado %s na linha %d" %(ch, linha(pos+1)))
         exit()
 
 def dc(ch, pos):
@@ -72,7 +72,7 @@ def dc(ch, pos):
     elif ch == "var":
         return (ch, pos)
     else:
-        print("Erro sintatico, esperado var ou procedure e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+        print("Erro sintatico, esperado var ou procedure e encontrado %s na linha %d" %(ch, linha(pos+1)))
         exit()
 
 def mais_dc(ch, pos):
@@ -82,12 +82,12 @@ def mais_dc(ch, pos):
             ch, pos = dc(ch, pos)
             return (ch, pos)
         else:
-            print("Erro sintatico, esperado var ou procedure e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+            print("Erro sintatico, esperado var ou procedure e encontrado %s na linha %d" %(ch, linha(pos+1)))
             exit()
     elif ch == "begin":
         return (ch, pos)
     else:
-        print("Erro sintatico, esperado ; ou begin e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+        print("Erro sintatico, esperado ; ou begin e encontrado %s na linha %d" %(ch, linha(pos+1)))
         exit()        
 
 def dc_v(ch, pos):
@@ -101,16 +101,16 @@ def dc_v(ch, pos):
                     ch, pos = tipo_var(ch, pos)
                     return (ch, pos)
                 else:
-                    print("Erro sintatico, esperado real ou integer e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+                    print("Erro sintatico, esperado real ou integer e encontrado %s na linha %d" %(ch, linha(pos+1)))
                     exit()  
             else:
-                print("Erro sintatico, esperado : e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+                print("Erro sintatico, esperado : e encontrado %s na linha %d" %(ch, linha(pos+1)))
                 exit()  
         else:
-            print("Erro sintatico, esperado identificador ou begin e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+            print("Erro sintatico, esperado identificador ou begin e encontrado %s na linha %d" %(ch, linha(pos+1)))
             exit()    
     else:
-        print("Erro sintatico, esperado ; ou begin e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+        print("Erro sintatico, esperado ; ou begin e encontrado %s na linha %d" %(ch, linha(pos+1)))
         exit() 
 
 
@@ -122,7 +122,7 @@ def tipo_var(ch, pos):
         ch, pos = proxsimb(pos)
         return (ch, pos)
     else:
-        print("Erro sintatico, esperado real ou integer e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+        print("Erro sintatico, esperado real ou integer e encontrado %s na linha %d" %(ch, linha(pos+1)))
         exit()   
 
 def variaveis(ch, pos):
@@ -132,10 +132,10 @@ def variaveis(ch, pos):
             ch, pos = mais_var(ch, pos)
             return (ch, pos)
         else:
-            print("Erro sintatico, esperado , ou : ou ) e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+            print("Erro sintatico, esperado , ou : ou ) e encontrado %s na linha %d" %(ch, linha(pos+1)))
             exit()
     else:
-        print("Erro sintatico, esperado identificador e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+        print("Erro sintatico, esperado identificador e encontrado %s na linha %d" %(ch, linha(pos+1)))
         exit()
 
 def mais_var(ch, pos):
@@ -145,12 +145,12 @@ def mais_var(ch, pos):
             ch, pos = variaveis(ch, pos)
             return (ch, pos)
         else:
-            print("Erro sintatico, esperado identificador e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+            print("Erro sintatico, esperado identificador e encontrado %s na linha %d" %(ch, linha(pos+1)))
             exit()
     elif ch == ":" or ch == ")":
         return (ch, pos)
     else:
-        print("Erro sintatico, esperado , ou : ou ) e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+        print("Erro sintatico, esperado , ou : ou ) e encontrado %s na linha %d" %(ch, linha(pos+1)))
         exit()
 
 def dc_p(ch, pos):
@@ -164,16 +164,16 @@ def dc_p(ch, pos):
                     ch, pos = corpo_p(ch, pos)
                     return (ch, pos)
                 else:
-                    print("Erro sintatico, esperado var ou begin e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+                    print("Erro sintatico, esperado var ou begin e encontrado %s na linha %d" %(ch, linha(pos+1)))
                     exit() 
             else:
-                print("Erro sintatico, esperado ( ou var ou begin e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+                print("Erro sintatico, esperado ( ou var ou begin e encontrado %s na linha %d" %(ch, linha(pos+1)))
                 exit() 
         else:
-            print("Erro sintatico, esperado identificador e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+            print("Erro sintatico, esperado identificador e encontrado %s na linha %d" %(ch, linha(pos+1)))
             exit() 
     else:
-        print("Erro sintatico, esperado procedure e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+        print("Erro sintatico, esperado procedure e encontrado %s na linha %d" %(ch, linha(pos+1)))
         exit() 
     
 def parametros(ch, pos):
@@ -185,15 +185,15 @@ def parametros(ch, pos):
                 ch, pos = proxsimb(pos)
                 return (ch, pos)
             else:
-                print("Erro sintatico, esperado ) e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+                print("Erro sintatico, esperado ) e encontrado %s na linha %d" %(ch, linha(pos+1)))
                 exit() 
         else:
-            print("Erro sintatico, esperado identificador e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+            print("Erro sintatico, esperado identificador e encontrado %s na linha %d" %(ch, linha(pos+1)))
             exit() 
     elif ch == "var" or ch == "begin":
         return (ch, pos)
     else:
-        print("Erro sintatico, esperado ( ou var ou begin e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+        print("Erro sintatico, esperado ( ou var ou begin e encontrado %s na linha %d" %(ch, linha(pos+1)))
         exit()
 
 def lista_par(ch, pos):
@@ -207,16 +207,16 @@ def lista_par(ch, pos):
                     ch, pos = mais_par(ch, pos)
                     return (ch, pos)
                 else:
-                    print("Erro sintatico, esperado ; ou ) e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+                    print("Erro sintatico, esperado ; ou ) e encontrado %s na linha %d" %(ch, linha(pos+1)))
                     exit() 
             else:
-                print("Erro sintatico, esperado real ou integer e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+                print("Erro sintatico, esperado real ou integer e encontrado %s na linha %d" %(ch, linha(pos+1)))
                 exit() 
         else:
-            print("Erro sintatico, esperado : e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+            print("Erro sintatico, esperado : e encontrado %s na linha %d" %(ch, linha(pos+1)))
             exit() 
     else:
-        print("Erro sintatico, esperado identificador ou begin e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+        print("Erro sintatico, esperado identificador ou begin e encontrado %s na linha %d" %(ch, linha(pos+1)))
         exit() 
 
 def mais_par(ch, pos):
@@ -226,12 +226,12 @@ def mais_par(ch, pos):
             ch, pos = lista_par(ch, pos)
             return (ch, pos)
         else:
-            print("Erro sintatico, esperado identificador e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+            print("Erro sintatico, esperado identificador e encontrado %s na linha %d" %(ch, linha(pos+1)))
             exit() 
     elif ch == ")":
         return (ch, pos)
     else:
-        print("Erro sintatico, esperado ; ou ) e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+        print("Erro sintatico, esperado ; ou ) e encontrado %s na linha %d" %(ch, linha(pos+1)))
         exit() 
 
 def corpo_p(ch, pos):
@@ -245,16 +245,16 @@ def corpo_p(ch, pos):
                     ch, pos = proxsimb(pos)
                     return (ch, pos)
                 else:
-                    print("Erro sintatico, esperado end e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+                    print("Erro sintatico, esperado end e encontrado %s na linha %d" %(ch, linha(pos+1)))
                     exit() 
             else:
-                print("Erro sintatico, esperado read ou write ou while ou if e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+                print("Erro sintatico, esperado read ou write ou while ou if e encontrado %s na linha %d" %(ch, linha(pos+1)))
                 exit() 
         else:
-            print("Erro sintatico, esperado begin e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+            print("Erro sintatico, esperado begin e encontrado %s na linha %d" %(ch, linha(pos+1)))
             exit() 
     else:
-        print("Erro sintatico, esperado var ou begin e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+        print("Erro sintatico, esperado var ou begin e encontrado %s na linha %d" %(ch, linha(pos+1)))
         exit() 
 
 def dc_loc(ch, pos):
@@ -264,12 +264,12 @@ def dc_loc(ch, pos):
             ch, pos = mais_dcloc(ch, pos)
             return (ch, pos)
         else:
-            print("Erro sintatico, esperado ; ou begin e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+            print("Erro sintatico, esperado ; ou begin e encontrado %s na linha %d" %(ch, linha(pos+1)))
             exit() 
     elif ch == "begin":
         return (ch, pos)
     else:
-        print("Erro sintatico, esperado var ou begin e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+        print("Erro sintatico, esperado var ou begin e encontrado %s na linha %d" %(ch, linha(pos+1)))
         exit() 
 
 def mais_dcloc(ch, pos):
@@ -279,12 +279,12 @@ def mais_dcloc(ch, pos):
             ch, pos = dc_loc(ch, pos)
             return (ch, pos)
         else:
-            print("Erro sintatico, esperado var ou begin e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+            print("Erro sintatico, esperado var ou begin e encontrado %s na linha %d" %(ch, linha(pos+1)))
             exit() 
     elif ch == "begin":
         return (ch, pos)
     else:
-        print("Erro sintatico, esperado procedure e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+        print("Erro sintatico, esperado procedure e encontrado %s na linha %d" %(ch, linha(pos+1)))
         exit() 
 
 def lista_arg(ch, pos):
@@ -296,12 +296,12 @@ def lista_arg(ch, pos):
                 ch, pos = proxsimb(pos)
                 return (ch, pos)
             else:
-                print("Erro sintatico, esperado ) e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+                print("Erro sintatico, esperado ) e encontrado %s na linha %d" %(ch, linha(pos+1)))
                 exit() 
     elif ch == "end" or ch == ";" or ch == "else" or ch == "$":
         return (ch, pos)
     else:
-        print("Erro sintatico, esperado ( ou end ou ; ou else ou $) e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+        print("Erro sintatico, esperado ( ou end ou ; ou else ou $) e encontrado %s na linha %d" %(ch, linha(pos+1)))
         exit() 
 
 def argumentos(ch, pos):
@@ -311,10 +311,10 @@ def argumentos(ch, pos):
             ch, pos = mais_ident(ch, pos)
             return (ch, pos)
         else:
-            print("Erro sintatico, esperado ; ou ) e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+            print("Erro sintatico, esperado ; ou ) e encontrado %s na linha %d" %(ch, linha(pos+1)))
             exit() 
     else:
-        print("Erro sintatico, esperado identificador e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+        print("Erro sintatico, esperado identificador e encontrado %s na linha %d" %(ch, linha(pos+1)))
         exit() 
 
 def mais_ident(ch, pos):
@@ -324,12 +324,12 @@ def mais_ident(ch, pos):
             ch, pos = argumentos(ch, pos)
             return (ch, pos)
         else:
-            print("Erro sintatico, esperado identificador e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+            print("Erro sintatico, esperado identificador e encontrado %s na linha %d" %(ch, linha(pos+1)))
             exit() 
     elif ch == ")":
         return (ch, pos)
     else:
-        print("Erro sintatico, esperado procedure e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+        print("Erro sintatico, esperado procedure e encontrado %s na linha %d" %(ch, linha(pos+1)))
         exit() 
 
 def pfalsa(ch, pos):
@@ -339,12 +339,12 @@ def pfalsa(ch, pos):
             ch, pos = comandos(ch, pos)
             return (ch, pos)
         else:
-            print("Erro sintatico, esperado identificador ou read ou write ou while ou if e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+            print("Erro sintatico, esperado identificador ou read ou write ou while ou if e encontrado %s na linha %d" %(ch, linha(pos+1)))
             exit() 
     elif ch == "$":
         return (ch, pos)
     else:
-        print("Erro sintatico, esperado else ou $ e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+        print("Erro sintatico, esperado else ou $ e encontrado %s na linha %d" %(ch, linha(pos+1)))
         exit() 
 
 def comandos(ch, pos):
@@ -354,10 +354,10 @@ def comandos(ch, pos):
             ch, pos = mais_comandos(ch, pos)
             return (ch, pos)
         else:
-            print("Erro sintatico, esperado ; ou end ou else ou $ e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+            print("Erro sintatico, esperado ; ou end ou else ou $ e encontrado %s na linha %d" %(ch, linha(pos+1)))
             exit() 
     else:
-        print("Erro sintatico, esperado identificador ou read ou write ou while ou if e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+        print("Erro sintatico, esperado identificador ou read ou write ou while ou if e encontrado %s na linha %d" %(ch, linha(pos+1)))
         exit() 
 
 def mais_comandos(ch, pos):
@@ -367,12 +367,12 @@ def mais_comandos(ch, pos):
             ch, pos = comandos(ch, pos)
             return (ch, pos)
         else:
-            print("Erro sintatico, esperado identificador ou read ou write ou while ou if e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+            print("Erro sintatico, esperado identificador ou read ou write ou while ou if e encontrado %s na linha %d" %(ch, linha(pos+1)))
             exit() 
     elif ch == "end" or ch == "else" or ch == "$":
         return (ch, pos)
     else:
-        print("Erro sintatico, esperado ; ou end ou else ou $ e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+        print("Erro sintatico, esperado ; ou end ou else ou $ e encontrado %s na linha %d" %(ch, linha(pos+1)))
         exit() 
 
 def comando(ch, pos):
@@ -386,13 +386,13 @@ def comando(ch, pos):
                     ch, pos = proxsimb(pos)
                     return (ch, pos)
                 else:
-                    print("Erro sintatico, esperado ) e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+                    print("Erro sintatico, esperado ) e encontrado %s na linha %d" %(ch, linha(pos+1)))
                     exit() 
             else:
-                print("Erro sintatico, esperado identificador e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+                print("Erro sintatico, esperado identificador e encontrado %s na linha %d" %(ch, linha(pos+1)))
                 exit() 
         else:
-            print("Erro sintatico, esperado ) e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+            print("Erro sintatico, esperado ) e encontrado %s na linha %d" %(ch, linha(pos+1)))
             exit() 
     elif ch == "write":
         ch, pos = proxsimb(pos)
@@ -404,13 +404,13 @@ def comando(ch, pos):
                     ch, pos = proxsimb(pos)
                     return (ch, pos)
                 else:
-                    print("Erro sintatico, esperado ) e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+                    print("Erro sintatico, esperado ) e encontrado %s na linha %d" %(ch, linha(pos+1)))
                     exit() 
             else:
-                print("Erro sintatico, esperado identificador e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+                print("Erro sintatico, esperado identificador e encontrado %s na linha %d" %(ch, linha(pos+1)))
                 exit() 
         else:
-            print("Erro sintatico, esperado ) e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+            print("Erro sintatico, esperado ) e encontrado %s na linha %d" %(ch, linha(pos+1)))
             exit() 
     elif ch == "while":
         ch, pos = proxsimb(pos)
@@ -424,16 +424,16 @@ def comando(ch, pos):
                         ch, pos = proxsimb(pos)
                         return (ch, pos)
                     else:
-                        print("Erro sintatico, esperado procedure e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+                        print("Erro sintatico, esperado procedure e encontrado %s na linha %d" %(ch, linha(pos+1)))
                         exit() 
                 else:
-                    print("Erro sintatico, esperado identificador ou read ou write ou while ou if e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+                    print("Erro sintatico, esperado identificador ou read ou write ou while ou if e encontrado %s na linha %d" %(ch, linha(pos+1)))
                     exit() 
             else:
-                print("Erro sintatico, esperado do e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+                print("Erro sintatico, esperado do e encontrado %s na linha %d" %(ch, linha(pos+1)))
                 exit() 
         else:
-            print("Erro sintatico, esperado ( ou + ou - ou numero_int ou numero_real e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+            print("Erro sintatico, esperado ( ou + ou - ou numero_int ou numero_real e encontrado %s na linha %d" %(ch, linha(pos+1)))
             exit() 
     elif ch == "if":
         ch, pos = proxsimb(pos)
@@ -449,19 +449,19 @@ def comando(ch, pos):
                             ch, pos = proxsimb(pos)
                             return (ch, pos)
                         else:
-                            print("Erro sintatico, $ procedure e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+                            print("Erro sintatico, $ procedure e encontrado %s na linha %d" %(ch, linha(pos+1)))
                             exit() 
                     else:
-                        print("Erro sintatico, esperado else ou $ e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+                        print("Erro sintatico, esperado else ou $ e encontrado %s na linha %d" %(ch, linha(pos+1)))
                         exit() 
                 else:
-                    print("Erro sintatico, esperado identificador ou read ou write ou while ou if e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+                    print("Erro sintatico, esperado identificador ou read ou write ou while ou if e encontrado %s na linha %d" %(ch, linha(pos+1)))
                     exit() 
             else:
-                print("Erro sintatico, esperado then e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+                print("Erro sintatico, esperado then e encontrado %s na linha %d" %(ch, linha(pos+1)))
                 exit() 
         else:
-            print("Erro sintatico, esperado ( ou + ou - ou numero_int ou numero_real e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+            print("Erro sintatico, esperado ( ou + ou - ou numero_int ou numero_real e encontrado %s na linha %d" %(ch, linha(pos+1)))
             exit() 
     elif isIdent(ch):
         ch, pos = proxsimb(pos)
@@ -469,10 +469,10 @@ def comando(ch, pos):
             ch, pos = restoIdent(ch, pos)
             return (ch, pos)
         else:
-            print("Erro sintatico, esperado ( ou := else ou $ ou end ou ; e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+            print("Erro sintatico, esperado ( ou := else ou $ ou end ou ; e encontrado %s na linha %d" %(ch, linha(pos+1)))
             exit() 
     else:
-        print("Erro sintatico, esperado read ou write ou while o if ou identificador e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+        print("Erro sintatico, esperado read ou write ou while o if ou identificador e encontrado %s na linha %d" %(ch, linha(pos+1)))
         exit() 
 
 def restoIdent(ch, pos):
@@ -482,13 +482,13 @@ def restoIdent(ch, pos):
             ch, pos = expressao(ch, pos)
             return (ch, pos)
         else:
-            print("Erro sintatico, esperado ( ou identificador ou numero_inteiro ou numero_real ou + ou - e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+            print("Erro sintatico, esperado ( ou identificador ou numero_inteiro ou numero_real ou + ou - e encontrado %s na linha %d" %(ch, linha(pos+1)))
             exit() 
     elif ch == "(" or ch == "end" or ch == ";" or ch == "else" or ch == "$":
         ch, pos = lista_arg(ch, pos)
         return (ch, pos)
     else:
-        print("Erro sintatico, esperado := ou ( end ou ; ou else oou $ e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+        print("Erro sintatico, esperado := ou ( end ou ; ou else oou $ e encontrado %s na linha %d" %(ch, linha(pos+1)))
         exit() 
 
 def condicao(ch, pos):
@@ -500,13 +500,13 @@ def condicao(ch, pos):
                 ch, pos = expressao(ch, pos)
                 return (ch, pos)
             else:
-                print("Erro sintatico, esperado ( ou identificador ou numero_inteiro ou numero_real ou + ou - e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+                print("Erro sintatico, esperado ( ou identificador ou numero_inteiro ou numero_real ou + ou - e encontrado %s na linha %d" %(ch, linha(pos+1)))
                 exit() 
         else:
-            print("Erro sintatico, esperado = ou <> ou >= ou <= ou > ou < e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+            print("Erro sintatico, esperado = ou <> ou >= ou <= ou > ou < e encontrado %s na linha %d" %(ch, linha(pos+1)))
             exit() 
     else:
-        print("Erro sintatico, esperado ( ou identificador ou numero_inteiro ou numero_real ou + ou - e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+        print("Erro sintatico, esperado ( ou identificador ou numero_inteiro ou numero_real ou + ou - e encontrado %s na linha %d" %(ch, linha(pos+1)))
         exit()     
 
 def relacao(ch, pos):
@@ -514,7 +514,7 @@ def relacao(ch, pos):
         ch, pos = proxsimb(pos)
         return (ch, pos)
     else:
-        print("Erro sintatico, esperado = ou <> ou >= ou <= ou > ou < e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+        print("Erro sintatico, esperado = ou <> ou >= ou <= ou > ou < e encontrado %s na linha %d" %(ch, linha(pos+1)))
         exit() 
 
 def expressao(ch, pos):
@@ -524,10 +524,10 @@ def expressao(ch, pos):
             ch, pos = outros_termos(ch, pos)
             return (ch, pos)
         else:
-            print("Erro sintatico, esperado + ou - ou end ou ; ou ) ou else ou do ou $ ou then ou then ou = ou <> ou >= ou <= ou > ou < e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+            print("Erro sintatico, esperado + ou - ou end ou ; ou ) ou else ou do ou $ ou then ou then ou = ou <> ou >= ou <= ou > ou < e encontrado %s na linha %d" %(ch, linha(pos+1)))
             exit() 
     else:
-        print("Erro sintatico, esperado numero_inteiro ou numero_real ou + ou - ou identificador ou ( e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+        print("Erro sintatico, esperado numero_inteiro ou numero_real ou + ou - ou identificador ou ( e encontrado %s na linha %d" %(ch, linha(pos+1)))
         exit()
 
 def op_un(ch, pos):
@@ -540,7 +540,7 @@ def op_un(ch, pos):
     elif isIdent(ch) or ch == "(" or isInt(ch) or isReal(ch):
         return (ch, pos)
     else:
-        print("Erro sintatico, esperado + ou - ou ( ou numero_inteiro ou numero_real e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+        print("Erro sintatico, esperado + ou - ou ( ou numero_inteiro ou numero_real e encontrado %s na linha %d" %(ch, linha(pos+1)))
         exit() 
 
 def outros_termos(ch, pos):
@@ -551,12 +551,12 @@ def outros_termos(ch, pos):
             ch, pos = outros_termos(ch, pos)
             return (ch, pos)
         else:
-            print("Erro sintatico, esperado numero_inteiro ou numero_real ou + ou - ou identificador ou ( e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+            print("Erro sintatico, esperado numero_inteiro ou numero_real ou + ou - ou identificador ou ( e encontrado %s na linha %d" %(ch, linha(pos+1)))
             exit()
     if ch == "end" or ch == ";" or ch == ch == ")" or ch == "else" or ch == "do" or ch == "$" or ch == "then" or ch == "=" or ch == "<>" or ch == ">=" or ch == "<=" or ch == ">" or ch == "<":
         return (ch, pos)
     else:
-        print("Erro sintatico, esperado identificador, ou ( ou + ou - ou end ou ; ou ) ou else ou do ou $ ou then ou = ou <> ou >= ou <= ou > ou < e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+        print("Erro sintatico, esperado identificador, ou ( ou + ou - ou end ou ; ou ) ou else ou do ou $ ou then ou = ou <> ou >= ou <= ou > ou < e encontrado %s na linha %d" %(ch, linha(pos+1)))
         exit() 
 
 def op_ad(ch, pos):
@@ -564,7 +564,7 @@ def op_ad(ch, pos):
         ch, pos = proxsimb(pos)
         return (ch, pos)
     else:
-        print("Erro sintatico, esperado + ou - e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+        print("Erro sintatico, esperado + ou - e encontrado %s na linha %d" %(ch, linha(pos+1)))
         exit() 
 
 def termo(ch, pos):
@@ -582,7 +582,7 @@ def mais_fatores(ch, pos):
     elif ch == "end" or ch == ";" or ch == ")" or ch == "else" or ch == "do" or ch == "$" or ch == "then" or ch == "=" or ch == "<>" or ch == ">=" or ch == "<=" or ch == ">" or ch == "<" or ch == "+" or ch == "-":
         return (ch, pos)
     else:
-        print("Erro sintatico, esperado * ou / ou end ou ; ou ) ou else ou do ou $ ou then ou = ou <> ou >= ou <= ou > ou < ou + ou - e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+        print("Erro sintatico, esperado * ou / ou end ou ; ou ) ou else ou do ou $ ou then ou = ou <> ou >= ou <= ou > ou < ou + ou - e encontrado %s na linha %d" %(ch, linha(pos+1)))
         exit() 
 
 def op_mul(ch, pos):
@@ -590,7 +590,7 @@ def op_mul(ch, pos):
         ch, pos = proxsimb(pos)
         return (ch, pos)
     else:
-        print("Erro sintatico, esperado * ou / e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+        print("Erro sintatico, esperado * ou / e encontrado %s na linha %d" %(ch, linha(pos+1)))
         exit() 
 
 def fator(ch, pos):
@@ -604,10 +604,10 @@ def fator(ch, pos):
             ch, pos = proxsimb(pos)
             return (ch, pos)
         else:
-            print("Erro sintatico, esperado ) e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+            print("Erro sintatico, esperado ) e encontrado %s na linha %d" %(ch, linha(pos+1)))
             exit() 
     else:
-        print("Erro sintatico, esperado identificador ou numero_real ou numero_inteiro ou ( e encontrado %s na %dº linha" %(ch, linha(pos+1)))
+        print("Erro sintatico, esperado identificador ou numero_real ou numero_inteiro ou ( e encontrado %s na linha %d" %(ch, linha(pos+1)))
         exit() 
 
 def proxsimb(pos):
