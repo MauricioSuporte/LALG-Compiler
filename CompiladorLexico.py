@@ -1,13 +1,32 @@
 arquivo = open("entrada.txt", "r")
 numLinha = 0
 tokens = []
+isComentario = False
 for linha in arquivo:
     numLinha = numLinha + 1
     linha = linha.rstrip()
     i = 0
     tam = len(linha)
     while i < tam:
-        if ((linha[i] >= "a" and linha[i] <= "z") or (linha[i] >= "A" and linha[i] <= "Z")):
+        if isComentario:
+            j = i
+            while (j < tam):
+                if (linha[j] == "*" and linha[j+1] == "/"):
+                    isComentario = False
+                    break
+                elif (linha[j] == "}"):
+                    isComentario = False
+                    break
+                elif j + 1 == tam:
+                    isComentario = True
+                    break
+                else:
+                    j = j + 1
+            if isComentario:
+                i = j + 1
+            else:    
+                i = j + 2
+        elif ((linha[i] >= "a" and linha[i] <= "z") or (linha[i] >= "A" and linha[i] <= "Z")):
             j = i + 1
             temp = linha[i]
             while (j < tam):
@@ -51,13 +70,22 @@ for linha in arquivo:
             while (j < tam):
                 if (linha[j] == "*" and linha[j+1] == "/"):
                     break
+                elif j + 1 == tam:
+                    isComentario = True
+                    break
                 else:
                     j = j + 1
-            i = j + 2
+            if isComentario:
+                i = j + 1
+            else:    
+                i = j + 2
         elif linha[i] == "{":
             j = i + 1
             while (j < tam):
                 if (linha[j] == "}"):
+                    break
+                elif j + 1 == tam:
+                    isComentario = True
                     break
                 else:
                     j = j + 1
