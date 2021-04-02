@@ -1,12 +1,16 @@
 arquivo = open("entrada.txt", "r")
 numLinha = 0
 tokens = []
+tokensCopia = []
+linhas = []
 isComentario = False
 for linha in arquivo:
     numLinha = numLinha + 1
+    linhas.append(len(tokens) + 1)
     linha = linha.rstrip()
     i = 0
     tam = len(linha)
+
     while i < tam:
         if isComentario:
             j = i
@@ -67,10 +71,13 @@ for linha in arquivo:
             i = i + 2
         elif linha[i] == "/" and linha[i+1] == "*":
             j = i + 2
+            if j + 1 >= tam:
+                isComentario = True
+                break
             while (j < tam):
                 if (linha[j] == "*" and linha[j+1] == "/"):
                     break
-                elif j + 1 == tam:
+                elif j + 1 >= tam:
                     isComentario = True
                     break
                 else:
@@ -81,10 +88,13 @@ for linha in arquivo:
                 i = j + 2
         elif linha[i] == "{":
             j = i + 1
+            if j + 1 >= tam:
+                isComentario = True
+                break
             while (j < tam):
                 if (linha[j] == "}"):
                     break
-                elif j + 1 == tam:
+                elif j + 1 >= tam:
                     isComentario = True
                     break
                 else:
@@ -137,11 +147,18 @@ for linha in arquivo:
             print("Erro lexico, caracter " + linha[i] + " nao conhecido na linha " + str(numLinha))
             exit()
 
-
 for i in range(len(tokens)):
     print(str(i+1) + "º" + str(tokens[i]))
+
 tokens[0] = tokens[0].replace(" ", "")
+linhas = str(linhas).replace("[", "").replace("]", "").replace(",", "")
+
 arqSintatico = open("entradaSintatico.txt", "w")
 arqSintatico.writelines(tokens)
 arqSintatico.close()
+
+arqLinhas = open("linhas.txt", "w")
+arqLinhas.writelines(linhas)
+arqLinhas.close()
+
 arquivo.close()
