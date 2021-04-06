@@ -11,6 +11,8 @@ posFinal = 0
 tempAtual = 0
 tabSimb = []
 verificacoes = []
+vemDeComando = False
+
 cod3End = []
 linhaCod = 1
 
@@ -18,6 +20,7 @@ def programa(ch, pos):
     if ch == "program":
         ch, pos = proxsimb(pos)
         if isIdent(ch):
+            addTabSimbNomeProg(ch)
             ch, pos = proxsimb(pos)
             ch, pos = corpo(ch, pos)
             if ch == ".":
@@ -91,6 +94,7 @@ def dc_v(ch, pos):
 
 def tipo_var(ch, pos):
     if ch == "real" or ch == "integer":
+        addTipo(ch)
         ch, pos = proxsimb(pos)
         return (ch, pos)
     else:
@@ -99,6 +103,7 @@ def tipo_var(ch, pos):
 
 def variaveis(ch, pos):
     if isIdent(ch):
+        addTabSimbVar(ch)
         ch, pos = proxsimb(pos)
         ch, pos = mais_var(ch, pos)
         return (ch, pos)
@@ -121,6 +126,7 @@ def dc_p(ch, pos):
     if ch == "procedure":
         ch, pos = proxsimb(pos)
         if isIdent(ch):
+            addTabSimbNomeProg(ch)
             ch, pos = proxsimb(pos)
             ch, pos = parametros(ch, pos)
             ch, pos = corpo_p(ch, pos)
@@ -271,11 +277,14 @@ def mais_comandos(ch, pos):
         exit() 
 
 def comando(ch, pos):
+    global vemDeComando
     if ch == "read":
         ch, pos = proxsimb(pos)
         if ch == "(":
             ch, pos = proxsimb(pos)
+            vemDeComando = True
             ch, pos = variaveis(ch, pos)
+            vemDeComando = False
             if ch == ")":
                 ch, pos = proxsimb(pos)
                 return (ch, pos)
@@ -289,7 +298,9 @@ def comando(ch, pos):
         ch, pos = proxsimb(pos)
         if ch == "(":
             ch, pos = proxsimb(pos)
+            vemDeComando = True
             ch, pos = variaveis(ch, pos)
+            vemDeComando = False
             if ch == ")":
                 ch, pos = proxsimb(pos)
                 return (ch, pos)
@@ -475,17 +486,31 @@ def linha(pos):
         if (pos >= int(linhas[i])) and (pos < int(linhas[i+1])):
             return i+1
 
-def addTabSimb(ch):
-    global posFinal, tabSimb
-    for i in range(0, len(tabSimb)):
-        if tabSimb[i]['Cadeia'] == ch:
-            print('Cadeia ' + ch + " ja existe na tabela de simbolos.")
-            exit()
+def addTabSimbNomeProg(ch):
+    global posInicial, posFinal, tabSimb
+    # for i in range(0, len(tabSimb)):
+    #     if tabSimb[i]['Cadeia'] == ch:
+    #         print('Cadeia ' + ch + " ja existe na tabela de simbolos.")
+    #         exit()
+    
+    posFinal += 1
+    posInicial = posFinal
+    conteudo = {'Cadeia': ch, 'Token': 'id', 'Categoria': 'nome_prog', 'Tipo': ''}
+    tabSimb.append(conteudo)
+
+def addTabSimbVar(ch):
+    global posFinal, tabSimb, vemDeComando
+    if vemDeComando:
+        return
+    # for i in range(0, len(tabSimb)):
+    #     if tabSimb[i]['Cadeia'] == ch:
+    #         print('Cadeia ' + ch + " ja existe na tabela de simbolos.")
+    #         exit()
     posFinal = posFinal + 1
     conteudo = {'Cadeia': ch, 'Token': 'id', 'Categoria': 'var', 'Tipo': 'null'}
     tabSimb.append(conteudo)
 
-def addTipo(ch, tipo):
+def addTipo(tipo):
     global posInicial, posFinal, tabSimb
     for i in range(posInicial, posFinal):
         tabSimb[i]['Tipo'] = tipo
@@ -526,3 +551,7 @@ def geraTemp(ch):
 #Main
 programa(tokens[0], 0)
 arquivo.close()
+
+print("\n=-=-=-=-=-=-=-=-=-=-=-=-=TABELA DE SIMBOLOS=-=-=-=-=-=-=-=-=-=-=-=-=")
+for i in range(len(tabSimb)):
+    print(tabSimb[i])
