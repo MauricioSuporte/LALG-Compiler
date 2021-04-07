@@ -12,6 +12,7 @@ tempAtual = 0
 tabSimb = []
 verificacoes = []
 vemDeComando = False
+escopo = {'Cadeia': "", 'PosInicial': 0}
 
 cod3End = []
 linhaCod = 1
@@ -487,28 +488,48 @@ def linha(pos):
             return i+1
 
 def addTabSimbNomeProg(ch):
-    global posInicial, posFinal, tabSimb
-    # for i in range(0, len(tabSimb)):
-    #     if tabSimb[i]['Cadeia'] == ch:
-    #         print('Cadeia ' + ch + " ja existe na tabela de simbolos.")
-    #         exit()
+    global posInicial, posFinal, tabSimb, escopo
     
+    if existeNomeProg(ch):
+        print("Nome_prog de cadeia %s ja existe na tabela de simbolos." %(ch))
+        exit()
+ 
+    conteudo = {'Cadeia': ch, 'Token': 'id', 'Categoria': 'nome_prog', 'Tipo': ''}
+    escopo = {'Cadeia': ch, 'PosInicial': posFinal}
     posFinal += 1
     posInicial = posFinal
-    conteudo = {'Cadeia': ch, 'Token': 'id', 'Categoria': 'nome_prog', 'Tipo': ''}
     tabSimb.append(conteudo)
 
+def existeNomeProg(ch):
+    global tabSimb
+
+    for i in range(len(tabSimb)):
+        if (tabSimb[i]['Cadeia'] == ch) and (tabSimb[i]['Categoria'] == 'nome_prog'):
+            return True
+    return False
+
 def addTabSimbVar(ch):
-    global posFinal, tabSimb, vemDeComando
+    global posFinal, tabSimb, vemDeComando, escopo
+
     if vemDeComando:
         return
-    # for i in range(0, len(tabSimb)):
-    #     if tabSimb[i]['Cadeia'] == ch:
-    #         print('Cadeia ' + ch + " ja existe na tabela de simbolos.")
-    #         exit()
+
+    if existeVar(ch):
+        print("Cadeia %s ja existe na tabela de simbolos do escopo %s." %(ch, escopo['Cadeia']))
+        exit()
+
     posFinal = posFinal + 1
     conteudo = {'Cadeia': ch, 'Token': 'id', 'Categoria': 'var', 'Tipo': 'null'}
     tabSimb.append(conteudo)
+
+def existeVar(ch):
+    global tabSimb, escopo
+
+    for i in range(escopo['PosInicial'], len(tabSimb)):
+        if i != escopo['PosInicial']: #Permite var com msm nome do procedimento
+            if tabSimb[i]['Cadeia'] == ch:
+                return True
+    return False
 
 def addTipo(tipo):
     global posInicial, posFinal, tabSimb
@@ -530,13 +551,6 @@ def verificaTipo(verificacoes):
             return False
     verificacoes = []
     return True
-
-def existe(ch):
-    global tabSimb
-    for i in range(len(tabSimb)):
-        if tabSimb[i]['Cadeia'] == ch:
-            return True
-    return False
 
 def geraTemp(ch):
     global tabSimb, tempAtual
