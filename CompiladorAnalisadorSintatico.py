@@ -10,6 +10,7 @@ posInicial = 0
 posFinal = 0
 tempAtual = 0
 tabSimb = []
+procedimentos = []
 verificacoes = []
 vemDeComando = False
 escopo = {'Cadeia': "", 'PosInicial': 0}
@@ -25,7 +26,8 @@ def programa(ch, pos):
             ch, pos = proxsimb(pos)
             ch, pos = corpo(ch, pos)
             if ch == ".":
-                print("Cadeia sintaticamente correta.")
+                imprimeTabSimb()
+                print("\nCadeia sintaticamente correta.")
             else:
                 print("Erro sintatico, esperado . e encontrado %s na linha %d" %(ch, linha(pos+1)))
                 exit()
@@ -183,6 +185,8 @@ def corpo_p(ch, pos):
         ch, pos = proxsimb(pos)
         ch, pos = comandos(ch, pos)
         if ch == "end":
+            imprimeTabSimb()
+            deletarEscopoAtual()
             ch, pos = proxsimb(pos)
             return (ch, pos)
         else:
@@ -232,6 +236,10 @@ def lista_arg(ch, pos):
 
 def argumentos(ch, pos):
     if isIdent(ch):
+        if not existeVar(ch):
+            print("Identificador %s na linha %d nao declarado" %(ch, linha(pos+1)))
+            exit()
+        addListaVerificacao(ch)
         ch, pos = proxsimb(pos)
         ch, pos = mais_ident(ch, pos)
         return (ch, pos)
@@ -343,6 +351,10 @@ def comando(ch, pos):
             print("Erro sintatico, esperado then e encontrado %s na linha %d" %(ch, linha(pos+1)))
             exit() 
     elif isIdent(ch):
+        if (not existeVar(ch)) and (not existeNomeProg(ch)):
+            print("Identificador %s na linha %d nao declarado" %(ch, linha(pos+1)))
+            exit()
+        addListaVerificacao(ch)
         ch, pos = proxsimb(pos)
         ch, pos = restoIdent(ch, pos)
         return (ch, pos)
@@ -398,6 +410,11 @@ def outros_termos(ch, pos):
         ch, pos = outros_termos(ch, pos)
         return (ch, pos)
     elif ch == "end" or ch == ";" or ch == ch == ")" or ch == "else" or ch == "do" or ch == "$" or ch == "then" or ch == "=" or ch == "<>" or ch == ">=" or ch == "<=" or ch == ">" or ch == "<":
+        global verificacoes
+        if len(verificacoes) != 0:
+            if not verificaTipo(verificacoes, pos+1):
+                exit()
+            verificacoes = []
         return (ch, pos)
     else:
         print("Erro sintatico, esperado identificador ou ( ou + ou - ou numero_inteiro ou numero_real ou end ou ; ou ) ou else ou do ou $ ou then ou = ou <> ou >= ou <= ou > ou < e encontrado %s na linha %d" %(ch, linha(pos+1)))
@@ -424,6 +441,11 @@ def mais_fatores(ch, pos):
         ch, pos = mais_fatores(ch, pos)
         return (ch, pos)
     elif ch == "end" or ch == ";" or ch == ")" or ch == "else" or ch == "do" or ch == "$" or ch == "then" or ch == "=" or ch == "<>" or ch == ">=" or ch == "<=" or ch == ">" or ch == "<" or ch == "+" or ch == "-":
+        global verificacoes
+        if len(verificacoes) != 0:
+            if not verificaTipo(verificacoes, pos+1):
+                exit()
+            verificacoes = []
         return (ch, pos)
     else:
         print("Erro sintatico, esperado * ou / ou end ou ; ou ) ou else ou do ou $ ou then ou = ou <> ou >= ou <= ou > ou < ou + ou - e encontrado %s na linha %d" %(ch, linha(pos+1)))
@@ -439,6 +461,10 @@ def op_mul(ch, pos):
 
 def fator(ch, pos):
     if isIdent(ch) or isInt(ch) or isReal(ch):
+        if (isIdent(ch)) and (not existeVar(ch)):
+            print("Identificador %s na linha %d nao declarado" %(ch, linha(pos+1)))
+            exit()
+        addListaVerificacao(ch)
         ch, pos = proxsimb(pos)
         return (ch, pos)
     elif ch == "(":
@@ -488,7 +514,7 @@ def linha(pos):
             return i+1
 
 def addTabSimbNomeProg(ch):
-    global posInicial, posFinal, tabSimb, escopo
+    global posInicial, posFinal, tabSimb, escopo, procedimentos
     
     if existeNomeProg(ch):
         print("Nome_prog de cadeia %s ja existe na tabela de simbolos." %(ch))
@@ -499,12 +525,13 @@ def addTabSimbNomeProg(ch):
     posFinal += 1
     posInicial = posFinal
     tabSimb.append(conteudo)
+    procedimentos.append(conteudo)
 
 def existeNomeProg(ch):
-    global tabSimb
+    global procedimentos
 
-    for i in range(len(tabSimb)):
-        if (tabSimb[i]['Cadeia'] == ch) and (tabSimb[i]['Categoria'] == 'nome_prog'):
+    for i in range(len(procedimentos)):
+        if (procedimentos[i]['Cadeia'] == ch) and (procedimentos[i]['Categoria'] == 'nome_prog'):
             return True
     return False
 
@@ -538,19 +565,40 @@ def addTipo(tipo):
     posInicial = posFinal
 
 def addListaVerificacao(ch):
-    global verificacoes, tabSimb
-    for i in range(len(tabSimb)):
-        if tabSimb[i]['Cadeia'] == ch:
-            verificacoes.append(tabSimb[i]['Tipo'])
+    global verificacoes, tabSimb, escopo
 
-def verificaTipo(verificacoes):
+    if isIdent(ch):
+        for i in range(escopo['PosInicial']+1, len(tabSimb)):
+            if tabSimb[i]['Cadeia'] == ch:
+                verificacoes.append(tabSimb[i]['Tipo'])
+                break
+    elif isInt(ch):
+        verificacoes.append('integer')
+    else:
+        verificacoes.append('real')
+
+def verificaTipo(verificacoes, pos):
     tipo = verificacoes[0]
     for i in verificacoes:
         if i != tipo:
-            print("Impossivel operar real com inteiro")
+            print("Impossivel operar real com inteiro na linha " + str(linha(pos)))
             return False
-    verificacoes = []
     return True
+
+def deletarEscopoAtual():
+    global escopo, posInicial, posFinal, tabSimb
+
+    for i in range(escopo['PosInicial'], len(tabSimb)):
+        tabSimb.pop()
+    posInicial = escopo['PosInicial']
+    posFinal = posInicial
+    escopo = {'Cadeia': tabSimb[0]['Cadeia'], 'PosInicial': 0}
+
+def imprimeTabSimb():
+    global escopo, tabSimb
+    print("\n=-=-=-=-=-=-=-=-=-=-=-=-TABELA DE SIMBOLOS %s=-=-=-=-=-=-=-=-=-=-=-=-" %(escopo['Cadeia']))
+    for i in range(escopo['PosInicial'], len(tabSimb)):
+        print(tabSimb[i])
 
 def geraTemp(ch):
     global tabSimb, tempAtual
@@ -565,7 +613,3 @@ def geraTemp(ch):
 #Main
 programa(tokens[0], 0)
 arquivo.close()
-
-print("\n=-=-=-=-=-=-=-=-=-=-=-=-=TABELA DE SIMBOLOS=-=-=-=-=-=-=-=-=-=-=-=-=")
-for i in range(len(tabSimb)):
-    print(tabSimb[i])
