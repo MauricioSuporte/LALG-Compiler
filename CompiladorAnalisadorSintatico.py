@@ -109,7 +109,10 @@ def tipo_var(ch, pos):
 
 def variaveis(ch, pos):
     if isIdent(ch):
-        global cat
+        global cat, vemDeComando
+        if (vemDeComando) and (not existeVar(ch)):
+            print("Identificador %s na linha %d nao declarado" %(ch, linha(pos+1)))
+            exit()
         addTabSimbVar(ch, cat)
         ch, pos = proxsimb(pos)
         ch, pos = mais_var(ch, pos)
@@ -529,7 +532,7 @@ def addTabSimbNomeProg(ch):
         exit()
  
     conteudo = {'Cadeia': ch, 'Token': 'id', 'Categoria': 'proc', 'Tipo': '', 'Valor': ''}
-    escopo = {'Cadeia': ch, 'PosInicial': posFinal}
+    escopo = {'Cadeia': ch, 'PosInicial': posFinal, 'Tamanho': ''}
     posFinal += 1
     posInicial = posFinal
     tabSimb.append(conteudo)
@@ -586,7 +589,7 @@ def existeNum(ch):
     global tabSimb, escopo
 
     for i in range(escopo['PosInicial'], len(tabSimb)):
-        if i != escopo['PosInicial']: #Permite var com msm nome do procedimento
+        if i != escopo['PosInicial']:
             if tabSimb[i]['Cadeia'] == ch:
                 return True
     return False
@@ -646,3 +649,4 @@ def geraTemp(ch):
 #Main
 programa(tokens[0], 0)
 arquivo.close()
+print(procedimentos)
