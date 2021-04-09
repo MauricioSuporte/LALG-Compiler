@@ -6,6 +6,7 @@ arqLinhas = open("linhas.txt", "r")
 linhas = arqLinhas.read()
 linhas = linhas.split(" ")
 
+cat = ""
 posInicial = 0
 posFinal = 0
 tempAtual = 0
@@ -81,6 +82,8 @@ def mais_dc(ch, pos):
 
 def dc_v(ch, pos):
     if ch == "var":
+        global cat
+        cat = "var"
         ch, pos = proxsimb(pos)
         ch, pos = variaveis(ch, pos)
         if ch == ":":
@@ -106,7 +109,8 @@ def tipo_var(ch, pos):
 
 def variaveis(ch, pos):
     if isIdent(ch):
-        addTabSimbVar(ch)
+        global cat
+        addTabSimbVar(ch, cat)
         ch, pos = proxsimb(pos)
         ch, pos = mais_var(ch, pos)
         return (ch, pos)
@@ -143,6 +147,8 @@ def dc_p(ch, pos):
     
 def parametros(ch, pos):
     if ch == "(":
+        global cat
+        cat = "param"
         ch, pos = proxsimb(pos)
         ch, pos = lista_par(ch, pos)
         if ch == ")":
@@ -464,6 +470,8 @@ def fator(ch, pos):
         if (isIdent(ch)) and (not existeVar(ch)):
             print("Identificador %s na linha %d nao declarado" %(ch, linha(pos+1)))
             exit()
+        if isInt(ch) or isReal(ch):
+            addTabSimbNum(ch)
         addListaVerificacao(ch)
         ch, pos = proxsimb(pos)
         return (ch, pos)
@@ -517,10 +525,10 @@ def addTabSimbNomeProg(ch):
     global posInicial, posFinal, tabSimb, escopo, procedimentos
     
     if existeNomeProg(ch):
-        print("Nome_prog de cadeia %s ja existe na tabela de simbolos." %(ch))
+        print("Proc de cadeia %s ja existe na tabela de simbolos." %(ch))
         exit()
  
-    conteudo = {'Cadeia': ch, 'Token': 'id', 'Categoria': 'nome_prog', 'Tipo': ''}
+    conteudo = {'Cadeia': ch, 'Token': 'id', 'Categoria': 'proc', 'Tipo': '', 'Valor': ''}
     escopo = {'Cadeia': ch, 'PosInicial': posFinal}
     posFinal += 1
     posInicial = posFinal
@@ -531,11 +539,11 @@ def existeNomeProg(ch):
     global procedimentos
 
     for i in range(len(procedimentos)):
-        if (procedimentos[i]['Cadeia'] == ch) and (procedimentos[i]['Categoria'] == 'nome_prog'):
+        if (procedimentos[i]['Cadeia'] == ch) and (procedimentos[i]['Categoria'] == 'proc'):
             return True
     return False
 
-def addTabSimbVar(ch):
+def addTabSimbVar(ch, cat):
     global posFinal, tabSimb, vemDeComando, escopo
 
     if vemDeComando:
@@ -546,10 +554,35 @@ def addTabSimbVar(ch):
         exit()
 
     posFinal = posFinal + 1
-    conteudo = {'Cadeia': ch, 'Token': 'id', 'Categoria': 'var', 'Tipo': 'null'}
+    conteudo = {'Cadeia': ch, 'Token': 'id', 'Categoria': cat, 'Tipo': 'null', 'Valor': ''}
     tabSimb.append(conteudo)
 
 def existeVar(ch):
+    global tabSimb, escopo
+
+    for i in range(escopo['PosInicial'], len(tabSimb)):
+        if i != escopo['PosInicial']: #Permite var com msm nome do procedimento
+            if tabSimb[i]['Cadeia'] == ch:
+                return True
+    return False
+
+def addTabSimbNum(ch):
+    global posFinal, tabSimb, vemDeComando, escopo
+
+    if existeNum(ch):
+        return
+
+    tipo = ""
+    if isInt(ch):
+        tipo = "integer"
+    else:
+        tipo = "real"
+
+    posFinal = posFinal + 1
+    conteudo = {'Cadeia': ch, 'Token': 'num', 'Categoria': '', 'Tipo': tipo, 'Valor': ch}
+    tabSimb.append(conteudo)
+
+def existeNum(ch):
     global tabSimb, escopo
 
     for i in range(escopo['PosInicial'], len(tabSimb)):
