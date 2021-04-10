@@ -13,6 +13,7 @@ tempAtual = 0
 tabSimb = []
 procedimentos = []
 verificacoes = []
+verificacoesReadWrite = []
 vemDeComando = False
 param = False
 escopo = {'Cadeia': "", 'PosInicial': 0}
@@ -117,6 +118,8 @@ def variaveis(ch, pos):
         if (vemDeComando) and (not existeVar(ch)):
             print("Identificador %s na linha %d nao declarado" %(ch, linha(pos+1)))
             exit()
+        if vemDeComando:
+            addVerificacaoReadWrite(ch)
         addTabSimbVar(ch, cat)
         ch, pos = proxsimb(pos)
         ch, pos = mais_var(ch, pos)
@@ -303,13 +306,14 @@ def mais_comandos(ch, pos):
         exit() 
 
 def comando(ch, pos):
-    global vemDeComando
+    global vemDeComando, verificacoesReadWrite
     if ch == "read":
         ch, pos = proxsimb(pos)
         if ch == "(":
             ch, pos = proxsimb(pos)
             vemDeComando = True
             ch, pos = variaveis(ch, pos)
+            verificaTipoReadWrite(pos+1)
             vemDeComando = False
             if ch == ")":
                 ch, pos = proxsimb(pos)
@@ -326,6 +330,7 @@ def comando(ch, pos):
             ch, pos = proxsimb(pos)
             vemDeComando = True
             ch, pos = variaveis(ch, pos)
+            verificaTipoReadWrite(pos+1)
             vemDeComando = False
             if ch == ")":
                 ch, pos = proxsimb(pos)
@@ -597,9 +602,8 @@ def existeVar(ch):
     global tabSimb, escopo
 
     for i in range(escopo['PosInicial'], len(tabSimb)):
-        if i != escopo['PosInicial']: #Permite var com msm nome do procedimento
-            if tabSimb[i]['Cadeia'] == ch:
-                return True
+        if tabSimb[i]['Cadeia'] == ch:
+            return True
     return False
 
 def addTabSimbNum(ch):
@@ -688,6 +692,29 @@ def verificaTipo(verificacoes, pos):
             return False
     return True
 
+def addVerificacaoReadWrite(ch):
+    global verificacoesReadWrite, tabSimb, escopo
+
+    if isIdent(ch):
+        for i in range(escopo['PosInicial']+1, len(tabSimb)):
+            if tabSimb[i]['Cadeia'] == ch:
+                verificacoesReadWrite.append(tabSimb[i]['Tipo'])
+                break
+    elif isInt(ch):
+        verificacoesReadWrite.append('integer')
+    else:
+        verificacoesReadWrite.append('real')
+
+def verificaTipoReadWrite(pos):
+    global verificacoesReadWrite
+    tipo = verificacoesReadWrite[0]
+    for i in verificacoesReadWrite:
+        if i != tipo:
+            print("Impossivel realizar comando read ou write com variaveis de tipos diferentes na linha " + str(linha(pos)))
+            exit()
+    verificacoesReadWrite = []
+    return True
+
 def deletarEscopoAtual():
     global escopo, posInicial, posFinal, tabSimb
 
@@ -716,4 +743,3 @@ def geraTemp(ch):
 #Main
 programa(tokens[0], 0)
 arquivo.close()
-print(procedimentos)
