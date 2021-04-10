@@ -524,25 +524,46 @@ def linha(pos):
         if (pos >= int(linhas[i])) and (pos < int(linhas[i+1])):
             return i+1
 
+def addParametros(ch):
+    global procedimentos
+    auxiliar = []
+
+    auxiliar.extend(procedimentos[len(procedimentos)-1])
+    if len(auxiliar) == 1:
+        auxiliar.append(1) #1º Parametro, então qnt param = 1
+    else:
+        auxiliar[1] = len(auxiliar) - 1 #Calcula a qnt de parametros do procedimento atual
+    auxiliar.append(ch)
+    procedimentos.pop()
+    procedimentos.append(auxiliar)
+
+    return
+
 def addTabSimbNomeProg(ch):
     global posInicial, posFinal, tabSimb, escopo, procedimentos
     
+    #Relação posições dadosProcedimento
+    #[0] = Cadeia | [1] = Qnt de parametros | [2]..[n-1] = Tipo do Parâmetro
+    dadosProcedimento = []
+
     if existeNomeProg(ch):
         print("Proc de cadeia %s ja existe na tabela de simbolos." %(ch))
         exit()
+
+    dadosProcedimento.append(ch)
  
     conteudo = {'Cadeia': ch, 'Token': 'id', 'Categoria': 'proc', 'Tipo': '', 'Valor': ''}
-    escopo = {'Cadeia': ch, 'PosInicial': posFinal, 'Tamanho': ''}
+    escopo = {'Cadeia': ch, 'PosInicial': posFinal}
     posFinal += 1
     posInicial = posFinal
     tabSimb.append(conteudo)
-    procedimentos.append(conteudo)
+    procedimentos.append(dadosProcedimento)
 
 def existeNomeProg(ch):
     global procedimentos
 
     for i in range(len(procedimentos)):
-        if (procedimentos[i]['Cadeia'] == ch) and (procedimentos[i]['Categoria'] == 'proc'):
+        if procedimentos[i][0] == ch:
             return True
     return False
 
@@ -598,6 +619,9 @@ def addTipo(tipo):
     global posInicial, posFinal, tabSimb
     for i in range(posInicial, posFinal):
         tabSimb[i]['Tipo'] = tipo
+        if tabSimb[i]['Categoria'] == "param":
+            addParametros(tipo)
+
     posInicial = posFinal
 
 def addListaVerificacao(ch):
