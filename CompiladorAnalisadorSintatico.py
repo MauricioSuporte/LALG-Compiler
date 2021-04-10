@@ -14,7 +14,11 @@ tabSimb = []
 procedimentos = []
 verificacoes = []
 vemDeComando = False
+param = False
 escopo = {'Cadeia': "", 'PosInicial': 0}
+contadorNumParam = 0
+tiposParam = []
+procSendoAnalisado = ""
 
 cod3End = []
 linhaCod = 1
@@ -245,9 +249,12 @@ def lista_arg(ch, pos):
 
 def argumentos(ch, pos):
     if isIdent(ch):
+        global param
         if not existeVar(ch):
             print("Identificador %s na linha %d nao declarado" %(ch, linha(pos+1)))
             exit()
+        if param:
+            addListaVerificacaoParam(ch)
         addListaVerificacao(ch)
         ch, pos = proxsimb(pos)
         ch, pos = mais_ident(ch, pos)
@@ -262,6 +269,7 @@ def mais_ident(ch, pos):
         ch, pos = argumentos(ch, pos)
         return (ch, pos)
     elif ch == ")":
+        verificaParam(pos+1)
         return (ch, pos)
     else:
         print("Erro sintatico, esperado ; ou ) e encontrado %s na linha %d" %(ch, linha(pos+1)))
@@ -360,9 +368,13 @@ def comando(ch, pos):
             print("Erro sintatico, esperado then e encontrado %s na linha %d" %(ch, linha(pos+1)))
             exit() 
     elif isIdent(ch):
+        global param, procSendoAnalisado
         if (not existeVar(ch)) and (not existeNomeProg(ch)):
             print("Identificador %s na linha %d nao declarado" %(ch, linha(pos+1)))
             exit()
+        if (existeNomeProg(ch)) and (not existeVar(ch)):
+            procSendoAnalisado = ch
+            param = True
         addListaVerificacao(ch)
         ch, pos = proxsimb(pos)
         ch, pos = restoIdent(ch, pos)
@@ -562,7 +574,7 @@ def addTabSimbNomeProg(ch):
 def existeNomeProg(ch):
     global procedimentos
 
-    for i in range(len(procedimentos)):
+    for i in range(1, len(procedimentos)):
         if procedimentos[i][0] == ch:
             return True
     return False
@@ -623,6 +635,37 @@ def addTipo(tipo):
             addParametros(tipo)
 
     posInicial = posFinal
+    
+def addListaVerificacaoParam(ch):
+    global tabSimb, contadorNumParam, tiposParam
+
+    contadorNumParam += 1
+
+    for i in range(1, len(tabSimb)):
+        if tabSimb[i]['Cadeia'] == ch:
+            tiposParam.append(tabSimb[i]['Tipo'])
+
+def verificaParam(pos):
+    global procedimentos, contadorNumParam, param, procSendoAnalisado, tiposParam
+
+    for i in range(len(procedimentos)):
+        if procedimentos[i][0] == procSendoAnalisado: 
+            if procedimentos[i][1] != contadorNumParam: #Verifica qnt de parametros
+                print("Esperado %d parametros na chamada de procedimento %s, nao %d como foi chamado na linha %d." %(procedimentos[i][1], procSendoAnalisado, contadorNumParam, linha(pos)))
+                exit()
+            copiaProcedimento = []
+            copiaProcedimento.extend(procedimentos[i])
+            for j in range(2, len(copiaProcedimento)):
+                if copiaProcedimento[j] != tiposParam[j-2]: #Verifica tipos e ordem de parametros
+                    print("Esperado parametros de tipo(os) %s no procedimento %s, mas foi chamado tipo(os) %s na linha %d." %(copiaProcedimento[2:], procSendoAnalisado, tiposParam, linha(pos)))
+                    exit()
+   
+
+    #zera variaveis de verificacoes dos parametros
+    param = False
+    contadorNumParam = 0
+    procSendoAnalisado = ""
+    tiposParam = []
 
 def addListaVerificacao(ch):
     global verificacoes, tabSimb, escopo
