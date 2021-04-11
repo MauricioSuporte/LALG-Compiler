@@ -28,7 +28,7 @@ N = {< programa >, < corpo >, < dc >, < comando >, < comandos >, <dc_v>, <mais_d
 T = {ident, numero_int, numero_real, (, ), *, /, +, -, <>, >=, >, <, if, then, $, while, do,
 write, read, ;, else, begin, end, :, , , }
 
-## Regras de Produção da LALG
+# Regras de Produção da LALG
 < programa > ::= program ident < corpo > .
  
 < corpo > ::= < dc > begin < comandos > end
