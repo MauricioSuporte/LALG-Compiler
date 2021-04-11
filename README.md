@@ -100,4 +100,4 @@ if < condicao > then < comandos > < pfalsa > $ |
 < fator > ::= ident | numero_int | numero_real | (< expressao >)
 
 
-## 1º Inserir entrada Lalg em entrada.txt, rodar arquivo léxico, depois Sintático.
+## Inserir entrada Lalg em entrada.txt e rodar CompiladorAnalisadorSintatico.py
