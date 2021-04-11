@@ -1,3 +1,7 @@
+from CompiladorLexico import *
+
+rodarLexico()
+
 arquivo = open("entradaSintatico.txt", "r")
 tokens = arquivo.read()
 tokens = tokens.split(" ")
@@ -6,6 +10,7 @@ arqLinhas = open("linhas.txt", "r")
 linhas = arqLinhas.read()
 linhas = linhas.split(" ")
 
+#Tabela de Símbolos
 cat = ""
 posInicial = 0
 posFinal = 0
@@ -21,8 +26,11 @@ contadorNumParam = 0
 tiposParam = []
 procSendoAnalisado = ""
 
-cod3End = []
-linhaCod = 1
+#Maquina Hipotética
+areadeCodigo = []
+areadeDados = []
+proxInstrucao = 0
+topoPilhaDados = 0
 
 def programa(ch, pos):
     if ch == "program":
@@ -664,7 +672,6 @@ def verificaParam(pos):
                     print("Esperado parametros de tipo(os) %s no procedimento %s, mas foi chamado tipo(os) %s na linha %d." %(copiaProcedimento[2:], procSendoAnalisado, tiposParam, linha(pos)))
                     exit()
    
-
     #zera variaveis de verificacoes dos parametros
     param = False
     contadorNumParam = 0
