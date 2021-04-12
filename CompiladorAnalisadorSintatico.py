@@ -32,13 +32,16 @@ desvio = ""
 posDesvio = 0
 posDSVI = 0
 posDSVF = 0
+posPUSHER = 0
 listaVariaveis = []
 areadeCodigo = []
 operador = ""
 readWrite = ""
-#areadeDados = []
-proxInstrucao = 0
-topoPilhaDados = 0
+DSVIProc = 0
+DSVFProc = 0
+contadorDESM = 0
+isProcedimento = False
+listaCodProcedimentos = []
 
 def programa(ch, pos):
     global areadeDados
@@ -133,7 +136,7 @@ def tipo_var(ch, pos):
 
 def variaveis(ch, pos):
     if isIdent(ch):
-        global cat, vemDeComando, areadeCodigo, readWrite
+        global cat, vemDeComando, areadeCodigo, readWrite, contadorDESM, isProcedimento
         if (vemDeComando) and (not existeVar(ch)):
             print("Identificador %s na linha %d nao declarado" %(ch, linha(pos+1)))
             exit()
@@ -147,8 +150,10 @@ def variaveis(ch, pos):
                 areadeCodigo.append("ARMZ " + ch)
             else:
                 areadeCodigo.append("ARMZ " + ch)
-        if not vemDeComando:
+        if not vemDeComando and cat != "param":
             areadeCodigo.append("ALME 1")
+        if not vemDeComando and isProcedimento:
+            contadorDESM += 1
         addTabSimbVar(ch, cat)
         ch, pos = proxsimb(pos)
         ch, pos = mais_var(ch, pos)
@@ -172,6 +177,11 @@ def dc_p(ch, pos):
     if ch == "procedure":
         ch, pos = proxsimb(pos)
         if isIdent(ch):
+            global areadeCodigo, DSVIProc, isProcedimento, listaCodProcedimentos
+            isProcedimento = True
+            areadeCodigo.append("DSVI")
+            DSVIProc = len(areadeCodigo)-1
+            listaCodProcedimentos.append({'Cadeia': ch, 'LinhaInicioCod': DSVIProc+1})
             addTabSimbNomeProg(ch)
             ch, pos = proxsimb(pos)
             ch, pos = parametros(ch, pos)
@@ -230,6 +240,12 @@ def corpo_p(ch, pos):
         ch, pos = proxsimb(pos)
         ch, pos = comandos(ch, pos)
         if ch == "end":
+            global areadeCodigo, DSVIProc, contadorDESM, isProcedimento
+            areadeCodigo.append("DESM %d" %(contadorDESM))
+            areadeCodigo.append("RTPR")
+            areadeCodigo[DSVIProc] = "DSVI %d" %(len(areadeCodigo))
+            contadorDESM = 0
+            isProcedimento = False
             imprimeTabSimb()
             deletarEscopoAtual()
             ch, pos = proxsimb(pos)
@@ -281,12 +297,13 @@ def lista_arg(ch, pos):
 
 def argumentos(ch, pos):
     if isIdent(ch):
-        global param
+        global param, areadeCodigo, contadorNumParam
         if not existeVar(ch):
             print("Identificador %s na linha %d nao declarado" %(ch, linha(pos+1)))
             exit()
         if param:
             addListaVerificacaoParam(ch)
+            areadeCodigo.append("PARAM %d" %(contadorNumParam-1))
         addListaVerificacao(ch)
         ch, pos = proxsimb(pos)
         ch, pos = mais_ident(ch, pos)
@@ -301,6 +318,9 @@ def mais_ident(ch, pos):
         ch, pos = argumentos(ch, pos)
         return (ch, pos)
     elif ch == ")":
+        global areadeCodigo, posPUSHER, procSendoAnalisado, listaCodProcedimentos
+        areadeCodigo.append("CHPR %d" %(inicioCod(procSendoAnalisado)))
+        areadeCodigo[posPUSHER] = "PUSHER %d" %(len(areadeCodigo))
         verificaParam(pos+1)
         return (ch, pos)
     else:
@@ -421,13 +441,15 @@ def comando(ch, pos):
             print("Erro sintatico, esperado then e encontrado %s na linha %d" %(ch, linha(pos+1)))
             exit() 
     elif isIdent(ch):
-        global param, procSendoAnalisado
+        global param, procSendoAnalisado, posPUSHER
         if (not existeVar(ch)) and (not existeNomeProg(ch)):
             print("Identificador %s na linha %d nao declarado" %(ch, linha(pos+1)))
             exit()
         if (existeNomeProg(ch)) and (not existeVar(ch)):
             procSendoAnalisado = ch
             param = True
+            areadeCodigo.append("PUSHER")
+            posPUSHER = (len(areadeCodigo)-1)
         addListaVerificacao(ch)
         ch, pos = proxsimb(pos)
         ch, pos = restoIdent(ch, pos)
@@ -838,6 +860,13 @@ def isOp(ch):
         return True
     else:
         return False
+
+def inicioCod(ch):
+    global listaCodProcedimentos
+
+    for i in range(len(listaCodProcedimentos)):
+        if listaCodProcedimentos[i]['Cadeia'] == ch:
+            return listaCodProcedimentos[i]['LinhaInicioCod']
 
 #Main
 programa(tokens[0], 0)
