@@ -1,3 +1,10 @@
+arquivo = open("codigo.txt", "r")
+pilhadeDados = []
+nLinha = -1
+comando = ""
+valor = ""
+
+#Funções Cod Hipotetico
 #carrega constante k no topo da pilha D
 def CRCT(k):
     return
@@ -95,3 +102,100 @@ def INPP():
 #termina a execução do programa
 def PARA():
     return
+
+#aloca memória e copia valor da posição n para o topo de D
+def PARAM(n):
+    return
+
+#empilha o índice e da instrução seguinte à chamada do
+#procedimento, como endereço de retorno, no array C
+def PUSHER(e):
+    return
+
+#desvia para instrução de índice p no array C, obtido na TS
+def CHPR(p):
+    return
+
+#desaloca m posições de memória, a partir do topo s de D
+def DESM(m):
+    return
+
+#retorna do procedimento – endereço de retorno estará no topo
+#de D – e desempilha o endereço
+def RTPR():
+    return
+
+for instrucao in arquivo:
+    nLinha += 1
+    instrucao = instrucao.replace("\n","")
+    instrucao = instrucao.split(" ")
+
+    if len(instrucao) == 1:
+        comando = instrucao[0]
+        print(nLinha, comando)
+    else:
+        comando = instrucao[0]
+        valor = instrucao[1]
+        print(nLinha, comando, valor)
+
+    if comando == "CRCT":
+        CRCT(valor)
+    elif comando == "CRVL":
+        CRVL(valor)
+    elif comando == "SOMA":
+        SOMA()
+    elif comando == "SUBT":
+        SUBT()
+    elif comando == "MULT":
+        MULT()
+    elif comando == "DIVI":
+        DIVI()
+    elif comando == "INVE":
+        INVE()
+    elif comando == "CONJ":
+        CONJ()
+    elif comando == "DISJ":
+        DISJ()
+    elif comando == "NEGA":
+        NEGA()
+    elif comando == "CPME":
+        CPME()
+    elif comando == "CPMA":
+        CPMA()
+    elif comando == "CPIG":
+        CPIG()
+    elif comando == "CDES":
+        CDES()
+    elif comando == "CPMI":
+        CPMI()
+    elif comando == "CMAI":
+        CMAI()
+    elif comando == "ARMZ":
+        ARMZ(valor)
+    elif comando == "DSVI":
+        DSVI(valor)
+    elif comando == "DSVF":
+        DSVF(valor)
+    elif comando == "LEIT":
+        LEIT()
+    elif comando == "IMPR":
+        IMPR()
+    elif comando == "ALME":
+        ALME(valor)
+    elif comando == "INPP":
+        INPP()
+    elif comando == "PARA":
+        PARA()
+    elif comando == "PARAM":
+        PARAM(valor)
+    elif comando == "PUSHER":
+        PUSHER(valor)
+    elif comando == "CHPR":
+        CHPR(valor)
+    elif comando == "DESM":
+        DESM(valor)
+    elif comando == "RTPR":
+        RTPR()
+    else:
+        print("Erro, instrucao %s desconhecida." %(comando))
+        exit()
