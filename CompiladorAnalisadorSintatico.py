@@ -296,13 +296,13 @@ def lista_arg(ch, pos):
 
 def argumentos(ch, pos):
     if isIdent(ch):
-        global param, areadeCodigo, contadorNumParam
+        global param, areadeCodigo, contadorNumPara
         if not existeVar(ch):
             print("Identificador %s na linha %d nao declarado" %(ch, linha(pos+1)))
             exit()
         if param:
             addListaVerificacaoParam(ch)
-            areadeCodigo.append("PARAM %d" %(contadorNumParam-1))
+            areadeCodigo.append("PARAM %d" %(posVar(ch)))
         addListaVerificacao(ch)
         ch, pos = proxsimb(pos)
         ch, pos = mais_ident(ch, pos)
