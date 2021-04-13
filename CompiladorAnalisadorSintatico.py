@@ -1,4 +1,3 @@
-from GeracaoCodHipotetico import *
 from CompiladorLexico import *
 
 rodarLexico()
@@ -44,7 +43,7 @@ isProcedimento = False
 listaCodProcedimentos = []
 
 def programa(ch, pos):
-    global areadeDados
+    global areadeCodigo
     if ch == "program":
         areadeCodigo.append("INPP")
         ch, pos = proxsimb(pos)
@@ -143,13 +142,13 @@ def variaveis(ch, pos):
         if vemDeComando:
             addVerificacaoReadWrite(ch)
             if readWrite == "write":
-                areadeCodigo.append("CRVL " + ch)
+                areadeCodigo.append("CRVL %d" %(posVar(ch)))
                 areadeCodigo.append("IMPR")
             elif readWrite == "read":
                 areadeCodigo.append("LEIT")
-                areadeCodigo.append("ARMZ " + ch)
+                areadeCodigo.append("ARMZ %d" %(posVar(ch)))
             else:
-                areadeCodigo.append("ARMZ " + ch)
+                areadeCodigo.append("ARMZ %d" %(posVar(ch)))
         if not vemDeComando and cat != "param":
             areadeCodigo.append("ALME 1")
         if not vemDeComando and isProcedimento:
@@ -517,7 +516,7 @@ def outros_termos(ch, pos):
                 exit()
             verificacoes = []
             if (len(listaVariaveis) == 1) or ((len(listaVariaveis) > 1) and (not isOp(ch))):
-                areadeCodigo.append("ARMZ " + listaVariaveis[0])
+                areadeCodigo.append("ARMZ %d" %(posVar(listaVariaveis[0])))
                 listaVariaveis = []
         return (ch, pos)
     else:
@@ -554,7 +553,7 @@ def mais_fatores(ch, pos):
             verificacoes = []
             if (len(listaVariaveis) == 1) or ((len(listaVariaveis) > 1) and (not isOp(ch))):
                 if desvio == "":
-                    areadeCodigo.append("ARMZ " + listaVariaveis[0])
+                    areadeCodigo.append("ARMZ %d" %(posVar(listaVariaveis[0])))
                 listaVariaveis = []
             elif (len(listaVariaveis) > 1) and (isOp(ch)):
                 operador = ch
@@ -574,7 +573,7 @@ def op_mul(ch, pos):
         exit() 
 
 def fator(ch, pos):
-    global areadeCodigo, operador
+    global areadeCodigo, operador, listaVariaveis
     if isIdent(ch) or isInt(ch) or isReal(ch):
         if (isIdent(ch)) and (not existeVar(ch)):
             print("Identificador %s na linha %d nao declarado" %(ch, linha(pos+1)))
@@ -583,7 +582,7 @@ def fator(ch, pos):
             areadeCodigo.append("CRCT " + ch)
             addTabSimbNum(ch)
         if isIdent(ch):
-            areadeCodigo.append("CRVL " + ch)
+            areadeCodigo.append("CRVL %d" %(posVar(ch)))
         if operador != "":
             incluirOp()
         addListaVerificacao(ch)
@@ -703,8 +702,17 @@ def existeVar(ch):
             return True
     return False
 
+def posVar(ch):
+    global tabSimb, escopo
+
+    posicao = -2
+    for i in range(escopo['PosInicial'], len(tabSimb)):
+        posicao += 1
+        if tabSimb[i]['Cadeia'] == ch:
+            return posicao
+
 def addTabSimbNum(ch):
-    global posFinal, tabSimb, vemDeComando, escopo
+    global posFinal, tabSimb
 
     if existeNum(ch):
         return
