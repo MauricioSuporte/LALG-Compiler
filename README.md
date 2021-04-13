@@ -99,5 +99,7 @@ if < condicao > then < comandos > < pfalsa > $ |
 
 < fator > ::= ident | numero_int | numero_real | (< expressao >)
 
-
-## Inserir entrada Lalg em entrada.txt e rodar CompiladorAnalisadorSintatico.py
+# Como rodar:
+- Inserir entrada na linguagem LALG em entrada.txt  
+- Executar compilador CompiladorAnalisadorSintatico.py
+- Executar interpretador GeracaoCodHipotetico.py
