@@ -135,20 +135,20 @@ def tipo_var(ch, pos):
 
 def variaveis(ch, pos):
     if isIdent(ch):
-        global cat, vemDeComando, areadeCodigo, readWrite, contadorDESM, isProcedimento
+        global cat, vemDeComando, areadeCodigo, readWrite, contadorDESM, isProcedimento, escopo
         if (vemDeComando) and (not existeVar(ch)):
             print("Identificador %s na linha %d nao declarado" %(ch, linha(pos+1)))
             exit()
         if vemDeComando:
             addVerificacaoReadWrite(ch)
             if readWrite == "write":
-                areadeCodigo.append("CRVL %d" %(posVar(ch)))
+                areadeCodigo.append("CRVL %d" %(posVar(ch, escopo)))
                 areadeCodigo.append("IMPR")
             elif readWrite == "read":
                 areadeCodigo.append("LEIT")
-                areadeCodigo.append("ARMZ %d" %(posVar(ch)))
+                areadeCodigo.append("ARMZ %d" %(posVar(ch, escopo)))
             else:
-                areadeCodigo.append("ARMZ %d" %(posVar(ch)))
+                areadeCodigo.append("ARMZ %d" %(posVar(ch, escopo)))
         if not vemDeComando and cat != "param":
             areadeCodigo.append("ALME 1")
         if not vemDeComando and isProcedimento:
@@ -296,14 +296,15 @@ def lista_arg(ch, pos):
 
 def argumentos(ch, pos):
     if isIdent(ch):
-        global param, areadeCodigo, contadorNumPara
+        global param, areadeCodigo, escopo
         if not existeVar(ch):
             print("Identificador %s na linha %d nao declarado" %(ch, linha(pos+1)))
             exit()
         if param:
             addListaVerificacaoParam(ch)
-            areadeCodigo.append("PARAM %d" %(posVar(ch)))
-        addListaVerificacao(ch)
+            areadeCodigo.append("PARAM %d" %(posVar(ch, escopo)))
+        if not param:
+            addListaVerificacao(ch)
         ch, pos = proxsimb(pos)
         ch, pos = mais_ident(ch, pos)
         return (ch, pos)
@@ -449,7 +450,8 @@ def comando(ch, pos):
             param = True
             areadeCodigo.append("PUSHER")
             posPUSHER = (len(areadeCodigo)-1)
-        addListaVerificacao(ch)
+        if not param:
+            addListaVerificacao(ch)
         ch, pos = proxsimb(pos)
         ch, pos = restoIdent(ch, pos)
         return (ch, pos)
@@ -510,14 +512,14 @@ def outros_termos(ch, pos):
         ch, pos = outros_termos(ch, pos)
         return (ch, pos)
     elif ch == "end" or ch == ";" or ch == ch == ")" or ch == "else" or ch == "do" or ch == "$" or ch == "then" or ch == "=" or ch == "<>" or ch == ">=" or ch == "<=" or ch == ">" or ch == "<":
-        global verificacoes, areadeCodigo, listaVariaveis, operador
+        global verificacoes, areadeCodigo, listaVariaveis, operador, escopo
         if len(verificacoes) != 0:
             if not verificaTipo(verificacoes, pos+1):
                 exit()
-            verificacoes = []
             if (len(listaVariaveis) == 1) or ((len(listaVariaveis) > 1) and (not isOp(ch))):
-                areadeCodigo.append("ARMZ %d" %(posVar(listaVariaveis[0])))
+                areadeCodigo.append("ARMZ %d" %(posVar(listaVariaveis[0], escopo)))
                 listaVariaveis = []
+                verificacoes = []
         return (ch, pos)
     else:
         print("Erro sintatico, esperado identificador ou ( ou + ou - ou numero_inteiro ou numero_real ou end ou ; ou ) ou else ou do ou $ ou then ou = ou <> ou >= ou <= ou > ou < e encontrado %s na linha %d" %(ch, linha(pos+1)))
@@ -546,15 +548,15 @@ def mais_fatores(ch, pos):
         ch, pos = mais_fatores(ch, pos)
         return (ch, pos)
     elif ch == "end" or ch == ";" or ch == ")" or ch == "else" or ch == "do" or ch == "$" or ch == "then" or ch == "=" or ch == "<>" or ch == ">=" or ch == "<=" or ch == ">" or ch == "<" or ch == "+" or ch == "-":
-        global verificacoes, areadeCodigo, listaVariaveis, operador, desvio
+        global verificacoes, areadeCodigo, listaVariaveis, operador, desvio, escopo
         if len(verificacoes) != 0:
             if not verificaTipo(verificacoes, pos+1):
                 exit()
-            verificacoes = []
             if (len(listaVariaveis) == 1) or ((len(listaVariaveis) > 1) and (not isOp(ch))):
                 if desvio == "":
-                    areadeCodigo.append("ARMZ %d" %(posVar(listaVariaveis[0])))
+                    areadeCodigo.append("ARMZ %d" %(posVar(listaVariaveis[0], escopo)))
                 listaVariaveis = []
+                verificacoes = []
             elif (len(listaVariaveis) > 1) and (isOp(ch)):
                 operador = ch
         return (ch, pos)
@@ -573,7 +575,7 @@ def op_mul(ch, pos):
         exit() 
 
 def fator(ch, pos):
-    global areadeCodigo, operador, listaVariaveis
+    global areadeCodigo, operador, escopo
     if isIdent(ch) or isInt(ch) or isReal(ch):
         if (isIdent(ch)) and (not existeVar(ch)):
             print("Identificador %s na linha %d nao declarado" %(ch, linha(pos+1)))
@@ -582,7 +584,7 @@ def fator(ch, pos):
             areadeCodigo.append("CRCT " + ch)
             addTabSimbNum(ch)
         if isIdent(ch):
-            areadeCodigo.append("CRVL %d" %(posVar(ch)))
+            areadeCodigo.append("CRVL %d" %(posVar(ch, escopo)))
         if operador != "":
             incluirOp()
         addListaVerificacao(ch)
@@ -702,14 +704,17 @@ def existeVar(ch):
             return True
     return False
 
-def posVar(ch):
-    global tabSimb, escopo
+def posVar(ch, escopo):
+    global tabSimb
+    posInicialEscopo = escopo['PosInicial']
 
-    posicao = -2
-    for i in range(escopo['PosInicial'], len(tabSimb)):
+    posicao = -1
+    for i in range(1, len(tabSimb)):
         posicao += 1
-        if tabSimb[i]['Cadeia'] == ch:
+        if (tabSimb[i]['Cadeia'] == ch) and (i >= posInicialEscopo):
             return posicao
+        if (tabSimb[i]['Categoria'] == 'proc'):
+            posicao -= 1
 
 def addTabSimbNum(ch):
     global posFinal, tabSimb
@@ -790,6 +795,7 @@ def addListaVerificacao(ch):
         verificacoes.append('real')
 
 def verificaTipo(verificacoes, pos):
+    global listaVariaveis
     tipo = verificacoes[0]
     for i in verificacoes:
         if i != tipo:
@@ -836,7 +842,7 @@ def imprimeTabSimb():
         print(tabSimb[i])
 
 def incluirOp():
-    global operador, areadeCodigo, listaVariaveis
+    global operador, areadeCodigo
 
     if operador == "+":
         areadeCodigo.append("SOMA")

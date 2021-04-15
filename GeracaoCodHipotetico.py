@@ -5,6 +5,7 @@ s = -1 #Posição da pila da área de dados
 nLinha = -1
 comando = ""
 valor = ""
+enderecoVariaveis = []
 
 #Funções Cod Hipotetico
 #carrega constante k no topo da pilha D
@@ -16,9 +17,9 @@ def CRCT(k):
 
 #carrega valor de endereço n no topo da pilha D
 def CRVL(n):
-    global D, s
+    global D, s, enderecoVariaveis
     s = s+1
-    D.append(D[n])
+    D.append(D[enderecoVariaveis[n]])
 
 #soma o elemento antecessor com o topo da pilha
 def SOMA():
@@ -118,8 +119,8 @@ def CMAI():
 
 #armazena o topo da pilha no endereço n de D
 def ARMZ(n):
-    global D, s
-    D[n] = D[s]
+    global D, s, enderecoVariaveis
+    D[enderecoVariaveis[n]] = D[s]
     s = s-1
     D.pop()
 
@@ -157,9 +158,10 @@ def IMPR():
 
 #reserva m posições na pilha D; m depende do tipo da variável
 def ALME(m):
-    global s, D
+    global s, D, enderecoVariaveis
     s = s + m
     D.append(0)
+    enderecoVariaveis.append(s)
 
 #inicia programa – será sempre a 1ª instrução
 def INPP():
@@ -172,10 +174,11 @@ def PARA():
 
 #aloca memória e copia valor da posição n para o topo de D
 def PARAM(n):
-    global s, D
+    global s, D, enderecoVariaveis
     s = s+1
     D.append(0)
-    D[s] = D[n]
+    D[s] = D[enderecoVariaveis[n]]
+    enderecoVariaveis.append(s)#TODO
 
 #empilha o índice e da instrução seguinte à chamada do
 #procedimento, como endereço de retorno, no array C
@@ -192,10 +195,11 @@ def CHPR(p):
 
 #desaloca m posições de memória, a partir do topo s de D
 def DESM(m):
-    global s, D
+    global s, D, enderecoVariaveis
     s = s - m
     for j in range(m):
         D.pop()
+        enderecoVariaveis.pop()
 
 #retorna do procedimento – endereço de retorno estará no topo
 #de D – e desempilha o endereço
